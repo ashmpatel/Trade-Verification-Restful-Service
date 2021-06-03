@@ -44,3 +44,10 @@ then
 11:30:31.488 [main] INFO  c.a.v.VertxSpringApplication - Started VertxSpringApplication in 2.954 seconds (JVM running for 3.705)
 11:30:31.490 [main] INFO  o.s.b.a.ApplicationAvailabilityBean - Application availability state LivenessState changed to CORRECT
 11:30:31.491 [main] INFO  o.s.b.a.ApplicationAvailabilityBean - Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+
+##How to scale the Vertx app
+1) Changhe the send method on vertx to publish.
+2) separate the sender and receiver into two separate jar files
+3) add a cluster manager dependency like Hazlecast.
+4) run the client and receiver in different consoles to see the clustering.
+Given time, this is an easy change to make as Vert is designed to cluster from the ground up so it's a simple tweak.

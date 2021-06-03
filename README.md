@@ -46,7 +46,7 @@ then
 11:30:31.491 [main] INFO  o.s.b.a.ApplicationAvailabilityBean - Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
 
 ##How to scale the Vertx app
-1) Changhe the send method on vertx to publish.
+1) Change the send method on vertx to publish.
 2) separate the sender and receiver into two separate jar files
 3) add a cluster manager dependency like Hazlecast.
 4) run the client and receiver in different consoles to see the clustering.

@@ -22,4 +22,25 @@ To test if the service is up:
    http://localhost:8069/api/v1/verifytrade
    
 To stop the service,simply kill the console running the main class.
-There are other ways to undeply the verticle but it's the same effectr as killing the jvm running oin the console.
+There are other ways to undeploy the verticle but it's the same effectr as killing the jvm runnin
+
+
+##How to Start The App:
+mvn install
+then
+/../../target>java -jar spring-vertx-1.0-SNAPSHOT.jar
+
+.   ____          _            __ _ _
+/\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+\\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+'  |____| .__|_| |_|_| |_\__, | / / / /
+=========|_|==============|___/=/_/_/_/
+:: Spring Boot ::                (v2.5.0)
+
+11:30:29.149 [main] INFO  c.a.v.VertxSpringApplication - Starting VertxSpringApplication using Java 1.8.0_281 on Ashi9laptop with PID 22076 (C:\Users\44795\IdeaProjects\spring-vertx\target\spring-vertx-1.0-SNAPSHOT.jar started by 44795 in C:\Users\44795\IdeaProjects\spring-vertx\target)
+11:30:29.152 [main] INFO  c.a.v.VertxSpringApplication - No active profile set, falling back to default profiles: default
+11:30:31.126 [vert.x-eventloop-thread-1] INFO  c.a.v.v.TradeVerificationVerticle - Started Service
+11:30:31.488 [main] INFO  c.a.v.VertxSpringApplication - Started VertxSpringApplication in 2.954 seconds (JVM running for 3.705)
+11:30:31.490 [main] INFO  o.s.b.a.ApplicationAvailabilityBean - Application availability state LivenessState changed to CORRECT
+11:30:31.491 [main] INFO  o.s.b.a.ApplicationAvailabilityBean - Application availability state ReadinessState changed to ACCEPTING_TRAFFIC

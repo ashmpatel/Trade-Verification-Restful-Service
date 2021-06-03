@@ -4,6 +4,8 @@ import com.ash.vertxspring.entity.TradeRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.handler.BodyHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,8 @@ public class ServerVerticle extends AbstractVerticle {
     private static final int OK_RESPONSE    = 200;
     private static final int ERROR_RESPONSE = 500;
 
+    private static final Logger LOGGER = LogManager.getLogger(ServerVerticle.class.getName());
+
     @Autowired
     private Integer defaultPort;
 
@@ -38,7 +42,7 @@ public class ServerVerticle extends AbstractVerticle {
             final TradeRequest tradeRequest = Json.decodeValue(routingContext.getBodyAsString(),
                     TradeRequest.class);
 
-            System.out.println("RECEIVED : " + tradeRequest.toString());
+           LOGGER.info("RECEIVED : " + tradeRequest.toString());
 
             vertx.eventBus()
                     .<String>send(TradeVerificationVerticle.VERIFY_TRADE, tradeRequest, result -> {
@@ -72,7 +76,10 @@ public class ServerVerticle extends AbstractVerticle {
                     .end(HEALTH_CHECK);
         });
 
+        // accept body in the post messages
         router.route().handler(BodyHandler.create());
+
+        // route all calls to verify trade to the verifytrade verticle
         router.post("/api/v1/verifytrade").handler(this::verifyTrade);
 
         vertx.createHttpServer()

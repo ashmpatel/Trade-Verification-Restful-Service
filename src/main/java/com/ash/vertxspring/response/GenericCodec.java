@@ -1,16 +1,16 @@
 package com.ash.vertxspring.response;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.MessageCodec;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.*;
 
 public class GenericCodec<T> implements MessageCodec<T, T> {
     private final Class<T> cls;
+
+    private static final Logger LOGGER = LogManager.getLogger(GenericCodec.class.getName());
 
     public GenericCodec(Class<T> cls) {
         super();
@@ -33,7 +33,8 @@ public class GenericCodec<T> implements MessageCodec<T, T> {
         } finally {
             try {
                 bos.close();
-            } catch (IOException ex) {}
+            } catch (IOException ex) {
+            }
         }
     }
 
@@ -55,11 +56,12 @@ public class GenericCodec<T> implements MessageCodec<T, T> {
             ois.close();
             return msg;
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Listen failed "+e.getMessage());
+            LOGGER.error("Listen failed " + e.getMessage());
         } finally {
             try {
                 bis.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         }
         return null;
     }
@@ -76,7 +78,7 @@ public class GenericCodec<T> implements MessageCodec<T, T> {
         // Each codec must have a unique name.
         // This is used to identify a codec when sending a message and for unregistering
         // codecs.
-        return cls.getSimpleName()+"Codec";
+        return cls.getSimpleName() + "Codec";
     }
 
     @Override

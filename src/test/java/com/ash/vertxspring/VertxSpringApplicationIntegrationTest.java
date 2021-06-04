@@ -1,5 +1,10 @@
 package com.ash.vertxspring;
 
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Verticle;
+import io.vertx.core.Vertx;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +14,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.concurrent.CountDownLatch;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class VertxSpringApplicationIntegrationTest {
+
+    private static final Logger LOGGER = LogManager.getLogger(VertxSpringApplicationIntegrationTest.class.getName());
 
     @Autowired
     private Integer port;
@@ -22,18 +32,20 @@ public class VertxSpringApplicationIntegrationTest {
     private TestRestTemplate restTemplate = new TestRestTemplate();
 
     @Test
+    // fail when an empty trade message is sent, no point doing any more field checks for nulls etc
     public void testSendEmptyTradeMmessage() throws InterruptedException {
 
         String sample = "";
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        System.out.println("Response was :" + responseEntity.toString());
+        LOGGER.info("Response was :" + responseEntity.toString());
 
         assertEquals(500, responseEntity.getStatusCodeValue());
     }
 
     @Test
+    // valid trade so expect all OK
     public void sendTradeRequestIsReceived() throws InterruptedException {
 
         String sample = "{\"customer\":\"YODA1\",\"ccyPair\":\"EURUSD\",\"type\":\"Spot\",\"direction\":\"BUY\",\"tradeDate\":\"2020-09-20\",\"amount1\":1000000.00,\"amount2\":1120000.00,\"rate\":1.12,\"valueDate\":\"2020-09-22\",\"legalEntity\":\"UBS AG\",\"trader\":\"Josef Schoenberger\"}";
@@ -44,38 +56,41 @@ public class VertxSpringApplicationIntegrationTest {
     }
 
     @Test
+    // YODA4 is not valid according to the spec so expectr a failure
     public void sendTradeRequestIsReceivedInvalidCustomer() throws InterruptedException {
 
         String sample = "{\"customer\":\"YODA4\",\"ccyPair\":\"EURUSD\",\"type\":\"Spot\",\"direction\":\"BUY\",\"tradeDate\":\"2020-08-11\",\"amount1\":1000000.00,\"amount2\":1120000.00,\"rate\":1.12,\"valueDate\":\"2020-08-15\",\"legalEntity\":\"UBS AG\",\"trader\":\"Josef Schoenberger\"}";
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        System.out.println("Response was :" + responseEntity.toString());
+        LOGGER.info("Response was :" + responseEntity.toString());
         assertEquals(500, responseEntity.getStatusCodeValue());
 
     }
 
     @Test
+    //currency needs to be a pair ike EURGBP not just EUR
     public void sendTradeRequestIsReceivedInvalidCCY() throws InterruptedException {
 
         String sample = "{\"customer\":\"YODA1\",\"ccyPair\":\"EUR\",\"type\":\"Spot\",\"direction\":\"BUY\",\"tradeDate\":\"2020-08-11\",\"amount1\":1000000.00,\"amount2\":1120000.00,\"rate\":1.12,\"valueDate\":\"2020-08-15\",\"legalEntity\":\"UBS AG\",\"trader\":\"Josef Schoenberger\"}";
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        System.out.println("Response was :" + responseEntity.toString());
+        LOGGER.info("Response was :" + responseEntity.toString());
 
         assertEquals(500, responseEntity.getStatusCodeValue());
 
     }
 
     @Test
+    // abother valid trade
     public void sendTradeRequestIsReceivedValid() throws InterruptedException {
 
         String sample = "{\"customer\":\"YODA1\",\"ccyPair\":\"EURUSD\",\"type\":\"Spot\",\"direction\":\"BUY\",\"tradeDate\":\"2020-10-12\",\"amount1\":1000000.00,\"amount2\":1120000.00,\"rate\":1.12,\"valueDate\":\"2020-10-14\",\"legalEntity\":\"UBS AG\",\"trader\":\"Josef Schoenberger\"}";
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        System.out.println("Response was :" + responseEntity.toString());
+        LOGGER.info("Response was :" + responseEntity.toString());
 
         assertEquals(200, responseEntity.getStatusCodeValue());
 
@@ -83,6 +98,7 @@ public class VertxSpringApplicationIntegrationTest {
 
 
     @Test
+    // a valid EuroOption
     public void sendTradeRequestIsReceivedValidEurOption() throws InterruptedException {
 
         String sample = "{\"customer\":\"YODA1\",\"ccyPair\":\"EURUSD\",\"type\":\"VanillaOption\",\"style\":\"EUROPEAN\"," +
@@ -94,7 +110,7 @@ public class VertxSpringApplicationIntegrationTest {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        System.out.println("Response was :" + responseEntity.toString());
+        LOGGER.info("Response was :" + responseEntity.toString());
 
         assertEquals(200, responseEntity.getStatusCodeValue());
 
@@ -113,7 +129,7 @@ public class VertxSpringApplicationIntegrationTest {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        System.out.println("Response was :" + responseEntity.toString());
+        LOGGER.info("Response was :" + responseEntity.toString());
 
         assertEquals(500, responseEntity.getStatusCodeValue());
 
@@ -132,7 +148,7 @@ public class VertxSpringApplicationIntegrationTest {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        System.out.println("Response was :" + responseEntity.toString());
+        LOGGER.info("Response was :" + responseEntity.toString());
 
         assertEquals(500, responseEntity.getStatusCodeValue());
 
@@ -150,7 +166,8 @@ public class VertxSpringApplicationIntegrationTest {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        System.out.println("Response was :" + responseEntity.toString());
+        LOGGER.info("Response was :" + responseEntity.toString());
+
         assertEquals(500, responseEntity.getStatusCodeValue());
 
     }
@@ -229,6 +246,33 @@ public class VertxSpringApplicationIntegrationTest {
 
         assertEquals(500, responseEntity.getStatusCodeValue());
 
+    }
+
+    // just to show that undeployment is ok in Vertx
+    @Test
+    public void testUndeployWhenUndeployIsInProgress() throws Exception {
+        final Vertx vertx = Vertx.vertx();
+        int numIts = 10;
+        CountDownLatch latch = new CountDownLatch(numIts);
+        for (int i = 0; i < numIts; i++) {
+            Verticle parent = new AbstractVerticle() {
+                @Override
+                public void start() throws Exception {
+                    vertx.deployVerticle(new AbstractVerticle() {
+                                         }, id -> {
+                                vertx.undeploy(id.result());
+                                assertTrue(id.succeeded());
+                            }
+                    );
+                }
+            };
+            vertx.deployVerticle(parent, id -> {
+                vertx.undeploy(id.result(), res -> {
+                    latch.countDown();
+                });
+            });
+        }
+        latch.await();
     }
 
 }

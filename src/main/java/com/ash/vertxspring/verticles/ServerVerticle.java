@@ -50,7 +50,9 @@ public class ServerVerticle extends AbstractVerticle {
                             if (result.result().body().length() != 0) {
                                 routingContext.response()
                                         .setStatusCode(ERROR_RESPONSE)
-                                        .end(result.result().body().toString());
+                                        // i do NOT need to send a message if all is ok as code 200 HTTP is fine to give that status.
+                                        //im just showing its possible to send messages too if needed
+                                        .end(result.result().body());
                             } else {
                                 routingContext.response()
                                         .putHeader(CONTENT_TYPE, JSON_RESPONSE)

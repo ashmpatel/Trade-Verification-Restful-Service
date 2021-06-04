@@ -1,8 +1,5 @@
 package com.ash.vertxspring;
 
-import com.ash.vertxspring.verticles.ServerVerticle;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +21,6 @@ public class VertxSpringApplicationIntegrationTest {
 
     private TestRestTemplate restTemplate = new TestRestTemplate();
 
-    private static final Logger LOGGER = LogManager.getLogger(VertxSpringApplicationIntegrationTest.class.getName());
-    
     @Test
     public void testSendEmptyTradeMmessage() throws InterruptedException {
 
@@ -33,7 +28,7 @@ public class VertxSpringApplicationIntegrationTest {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-       LOGGER.info("Response was :" + responseEntity.toString());
+        System.out.println("Response was :" + responseEntity.toString());
 
         assertEquals(500, responseEntity.getStatusCodeValue());
     }
@@ -55,7 +50,7 @@ public class VertxSpringApplicationIntegrationTest {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        LOGGER.info("Response was :" + responseEntity.toString());
+        System.out.println("Response was :" + responseEntity.toString());
         assertEquals(500, responseEntity.getStatusCodeValue());
 
     }
@@ -67,7 +62,7 @@ public class VertxSpringApplicationIntegrationTest {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        LOGGER.info("Response was :" + responseEntity.toString());
+        System.out.println("Response was :" + responseEntity.toString());
 
         assertEquals(500, responseEntity.getStatusCodeValue());
 
@@ -80,7 +75,7 @@ public class VertxSpringApplicationIntegrationTest {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        LOGGER.info("Response was :" + responseEntity.toString());
+        System.out.println("Response was :" + responseEntity.toString());
 
         assertEquals(200, responseEntity.getStatusCodeValue());
 
@@ -99,7 +94,7 @@ public class VertxSpringApplicationIntegrationTest {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        LOGGER.info("Response was :" + responseEntity.toString());
+        System.out.println("Response was :" + responseEntity.toString());
 
         assertEquals(200, responseEntity.getStatusCodeValue());
 
@@ -118,7 +113,7 @@ public class VertxSpringApplicationIntegrationTest {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        LOGGER.info("Response was :" + responseEntity.toString());
+        System.out.println("Response was :" + responseEntity.toString());
 
         assertEquals(500, responseEntity.getStatusCodeValue());
 
@@ -137,7 +132,7 @@ public class VertxSpringApplicationIntegrationTest {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        LOGGER.info("Response was :" + responseEntity.toString());
+        System.out.println("Response was :" + responseEntity.toString());
 
         assertEquals(500, responseEntity.getStatusCodeValue());
 
@@ -155,7 +150,7 @@ public class VertxSpringApplicationIntegrationTest {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity("http://localhost:" + port + "/api/v1/verifytrade", sample, String.class);
 
-        LOGGER.info("Response was :" + responseEntity.toString());
+        System.out.println("Response was :" + responseEntity.toString());
         assertEquals(500, responseEntity.getStatusCodeValue());
 
     }
